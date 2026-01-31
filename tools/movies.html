@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What to Watch Tonight | feralghost</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a0a;
+            color: #e0e0e0;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            margin-bottom: 2rem;
+        }
+        h1 {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .back {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        .back:hover { color: #fff; }
+        
+        .random-pick {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .random-pick h2 {
+            color: #888;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+        #random-movie {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            text-align: left;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        #random-movie img {
+            width: 120px;
+            border-radius: 4px;
+        }
+        #random-movie .info h3 {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+        #random-movie .info .meta {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+        #random-movie .info .overview {
+            color: #666;
+            font-size: 0.85rem;
+            max-width: 400px;
+        }
+        .reroll {
+            background: #222;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 1rem;
+        }
+        .reroll:hover { background: #333; }
+        
+        section {
+            margin-bottom: 3rem;
+        }
+        section h2 {
+            color: #666;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #222;
+            padding-bottom: 0.5rem;
+        }
+        .movies {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+        .movie {
+            text-align: center;
+        }
+        .movie img {
+            width: 100%;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            transition: transform 0.2s;
+        }
+        .movie img:hover {
+            transform: scale(1.05);
+        }
+        .movie h3 {
+            color: #fff;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        .movie .meta {
+            color: #888;
+            font-size: 0.75rem;
+        }
+        .movie a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .rating {
+            color: #f5c518;
+        }
+        
+        footer {
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid #222;
+            color: #444;
+            font-size: 0.8rem;
+        }
+        footer a { color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back">← feralghost</a>
+        <header>
+            <h1>What to Watch Tonight</h1>
+            <p class="subtitle">curated picks, updated periodically</p>
+        </header>
+
+        <div class="random-pick">
+            <h2>Can't Decide? Random Pick</h2>
+            <div id="random-movie"></div>
+            <button class="reroll" onclick="randomPick()">Roll Again</button>
+        </div>
+
+        <section>
+            <h2>Popular Right Now</h2>
+            <div class="movies" id="popular"></div>
+        </section>
+
+        <section>
+            <h2>All-Time Classics</h2>
+            <div class="movies" id="classics"></div>
+        </section>
+
+        <footer>
+            Data from <a href="https://www.themoviedb.org/">TMDB</a>. Updated Jan 31, 2026.
+        </footer>
+    </div>
+
+    <script>
+        const popular = [
+            {id: 1084242, title: "Zootopia 2", rating: 7.6, year: "2025", overview: "After cracking the biggest case in Zootopia's history, rookie cops Judy Hopps and Nick Wilde find themselves on the twisting trail of a great mystery.", poster: "https://image.tmdb.org/t/p/w342/oJ7g2CifqpStmoYQyaLQgEU32qO.jpg"},
+            {id: 1242898, title: "Predator: Badlands", rating: 7.8, year: "2025", overview: "Cast out from his clan, a young Predator finds an unlikely ally in a damaged android and embarks on a treacherous journey.", poster: "https://image.tmdb.org/t/p/w342/pHpq9yNUIo6aDoCXEBzjSolywgz.jpg"},
+            {id: 1419406, title: "The Shadow's Edge", rating: 7.2, year: "2025", overview: "Macau Police brings the tracking expert police officer out of retirement to help catch a dangerous group of professional thieves.", poster: "https://image.tmdb.org/t/p/w342/e0RU6KpdnrqFxDKlI3NOqN8nHL6.jpg"},
+            {id: 1306368, title: "The Rip", rating: 7.1, year: "2026", overview: "Trust frays when a team of Miami cops discovers millions in cash inside a run-down stash house.", poster: "https://image.tmdb.org/t/p/w342/p4bW2sJKAwcHuLpfoZK7Zo63osA.jpg"},
+            {id: 840464, title: "Greenland 2: Migration", rating: 6.6, year: "2026", overview: "Having found the safety of the Greenland bunker after the comet Clarke decimated the Earth, the Garrity family must now risk everything.", poster: "https://image.tmdb.org/t/p/w342/dtPwBZjzqTaObjG4fKStRkBq1uu.jpg"},
+            {id: 1168190, title: "The Wrecking Crew", rating: 6.3, year: "2026", overview: "Estranged half-brothers Jonny and James reunite after their father's mysterious death.", poster: "https://image.tmdb.org/t/p/w342/gbVwHl4YPSq6BcC92TQpe7qUTh6.jpg"}
+        ];
+
+        const classics = [
+            {id: 278, title: "The Shawshank Redemption", rating: 8.7, year: "1994", overview: "Imprisoned in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison.", poster: "https://image.tmdb.org/t/p/w342/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"},
+            {id: 238, title: "The Godfather", rating: 8.7, year: "1972", overview: "Spanning the years 1945 to 1955, a chronicle of the fictional Italian-American Corleone crime family.", poster: "https://image.tmdb.org/t/p/w342/3bhkrj58Vtu7enYsRolD1fZdja1.jpg"},
+            {id: 389, title: "12 Angry Men", rating: 8.6, year: "1957", overview: "The jury is filing into the jury room to decide if a young Spanish-American is guilty or innocent of murdering his father.", poster: "https://image.tmdb.org/t/p/w342/ow3wq89wM8qd5X7hWKxiRfsFf9C.jpg"},
+            {id: 129, title: "Spirited Away", rating: 8.5, year: "2001", overview: "A young girl, Chihiro, becomes trapped in a strange new world of spirits.", poster: "https://image.tmdb.org/t/p/w342/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg"},
+            {id: 155, title: "The Dark Knight", rating: 8.5, year: "2008", overview: "Batman raises the stakes in his war on crime with the help of Lt. Jim Gordon and District Attorney Harvey Dent.", poster: "https://image.tmdb.org/t/p/w342/qJ2tW6WMUDux911r6m7haRef0WH.jpg"},
+            {id: 424, title: "Schindler's List", rating: 8.6, year: "1993", overview: "The true story of how businessman Oskar Schindler saved over a thousand Jewish lives from the Nazis.", poster: "https://image.tmdb.org/t/p/w342/sF1U4EUQS8YHUYjNl3pMGNIQyr0.jpg"}
+        ];
+
+        const allMovies = [...popular, ...classics];
+
+        function renderMovies(movies, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = movies.map(m => `
+                <div class="movie">
+                    <a href="https://www.themoviedb.org/movie/${m.id}" target="_blank">
+                        <img src="${m.poster}" alt="${m.title}" loading="lazy">
+                        <h3>${m.title}</h3>
+                        <div class="meta"><span class="rating">★ ${m.rating}</span> · ${m.year}</div>
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function randomPick() {
+            const movie = allMovies[Math.floor(Math.random() * allMovies.length)];
+            document.getElementById('random-movie').innerHTML = `
+                <img src="${movie.poster}" alt="${movie.title}">
+                <div class="info">
+                    <h3>${movie.title}</h3>
+                    <div class="meta"><span class="rating">★ ${movie.rating}</span> · ${movie.year}</div>
+                    <p class="overview">${movie.overview}</p>
+                </div>
+            `;
+        }
+
+        renderMovies(popular, 'popular');
+        renderMovies(classics, 'classics');
+        randomPick();
+    </script>
+</body>
+</html>
